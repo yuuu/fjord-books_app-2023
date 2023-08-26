@@ -15,13 +15,15 @@ RSpec.describe Report, type: :model do
   let(:report) { user.reports.create(title: 'タイトル', content:) }
 
   describe '#editable?' do
-    context '自分の日報の場合' do
+    context 'with 自分の日報' do
       subject { report.editable?(user) }
 
       it { is_expected.to eq true }
     end
 
-    context '他人の日報の場合' do
+    context 'with 他人の日報' do
+      subject { report.editable?(other_user) }
+
       let(:other_user) do
         User.create(
           email: 'other_user@example.com',
@@ -30,7 +32,6 @@ RSpec.describe Report, type: :model do
           password_confirmation: 'password'
         )
       end
-      subject { report.editable?(other_user) }
 
       it { is_expected.to eq false }
     end
@@ -48,7 +49,7 @@ RSpec.describe Report, type: :model do
     let(:other_report0) { user.reports.create(title: '別の日報0', content: 'コンテンツ') }
     let(:other_report1) { user.reports.create(title: '別の日報1', content: 'コンテンツ') }
 
-    context '別の日報への言及がある場合' do
+    context 'when 別の日報への言及がある' do
       let(:content) do
         <<~CONTENT
           別の日報にメンションを送ります。
@@ -58,16 +59,16 @@ RSpec.describe Report, type: :model do
           http://localhost:3000/reports/#{other_report1.id}
         CONTENT
       end
+
       it 'メンションを保存すること' do
         report.content = content
         report.save
 
-        expect(report.mentioning_reports[0]).to eq other_report0
-        expect(report.mentioning_reports[1]).to eq other_report1
+        expect(report.mentioning_reports).to match_array([other_report0, other_report1])
       end
     end
 
-    context '別の日報への言及がない場合' do
+    context 'when 別の日報への言及がない' do
       let(:content) { '言及のない日報です' }
 
       it 'メンションを保存しないこと' do
