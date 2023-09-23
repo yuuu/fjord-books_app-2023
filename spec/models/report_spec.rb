@@ -35,8 +35,6 @@ RSpec.describe Report, type: :model do
 
   describe '#save_mentions' do
     let(:user) { create(:user) }
-    let(:report) { create(:report, user:, content:) }
-
     let(:other_user) { create(:other_user) }
     let(:other_report1) { create(:report, user: other_user, content: <<~CONTENT) }
       ボウリングのスコア計算のプログラムにメンターの方からコメントをいただいたので修正しました。
@@ -46,10 +44,58 @@ RSpec.describe Report, type: :model do
       プログラムを書き始めて1日が経過しましたが、まだボウリングのスコア計算ができていません。
       ストライクやスペアを考慮せず、スコアを単純に合計することはできています。
     CONTENT
+    let(:other_report3) { create(:report, user: other_user, content: <<~CONTENT) }
+      ついにボウリングのスコア計算ができました！
+      提出し終えたので、レビューが楽しみです。
+    CONTENT
 
-    context '別の日報への言及がある場合' do
-      let(:content) do
-        <<~CONTENT
+    context '新規作成時' do
+      let(:report) { build(:report, user:, content: <<~CONTENT) }
+        ボウリングのスコア計算プログラムを考え始めました。
+        カレンダーよりもたくさんのコードを書く必要がありそうでワクワクします。
+
+        早速行き詰まってしまったので、他の生徒の方の日報を読ませていただきました。
+
+        ダブルストライクの場合も考慮する必要があるんですね。
+        http://localhost:3000/reports/#{other_report1.id}
+
+        この方のようにまずはスコアを単純に合計するところからスタートしたいと思いました。
+        http://localhost:3000/reports/#{other_report2.id}
+
+        存在しないレポートを読みました
+        http://localhost:3000/reports/0
+      CONTENT
+
+      it '他日報への言及を保存すること' do
+        report.save!
+
+        # MEMO: 他日報への言及を保存すること(以下も併せてチェックする)
+        # - 存在しないURLは無視すること
+        expect(report.mentioning_reports).to contain_exactly(other_report1, other_report2)
+        expect(other_report1.mentioned_reports).to contain_exactly(report)
+        expect(other_report2.mentioned_reports).to contain_exactly(report)
+      end
+    end
+
+    context '更新時' do
+      let(:report) { create(:report, user:, content: <<~CONTENT) }
+        ボウリングのスコア計算プログラムを考え始めました。
+        カレンダーよりもたくさんのコードを書く必要がありそうでワクワクします。
+
+        早速行き詰まってしまったので、他の生徒の方の日報を読ませていただきました。
+
+        ダブルストライクの場合も考慮する必要があるんですね。
+        http://localhost:3000/reports/#{other_report1.id}
+
+        この方のようにまずはスコアを単純に合計するところからスタートしたいと思いました。
+        http://localhost:3000/reports/#{other_report2.id}
+
+        存在しないレポートを読みました
+        http://localhost:3000/reports/0
+      CONTENT
+
+      it '更新後の他日報への言及を保存すること' do
+        report.update!(content: <<~CONTENT)
           ボウリングのスコア計算プログラムを考え始めました。
           カレンダーよりもたくさんのコードを書く必要がありそうでワクワクします。
 
@@ -58,30 +104,47 @@ RSpec.describe Report, type: :model do
           ダブルストライクの場合も考慮する必要があるんですね。
           http://localhost:3000/reports/#{other_report1.id}
 
-          この方のようにまずはスコアを単純に合計するところからスタートしたいと思いました。
-          http://localhost:3000/reports/#{other_report2.id}
+          この方のように早くプログラムを完成させたいです
+          http://localhost:3000/reports/#{other_report3.id}
+          http://localhost:3000/reports/#{other_report3.id}
+
+          これは私の日報です
+          http://localhost:3000/reports/#{report.id}
         CONTENT
-      end
 
-      it '言及を保存すること' do
-        report.save!
-
-        expect(report.mentioning_reports).to contain_exactly(other_report1, other_report2)
+        # MEMO: 更新後の他日報への言及を保存すること(以下も併せてチェックする)
+        # - 削除されたURLは言及がなくなる
+        # - 重複したURLは1つにまとめる
+        # - 自分の日報への言及は無視する
+        expect(report.reload.mentioning_reports).to contain_exactly(other_report1, other_report3)
+        expect(other_report1.mentioned_reports).to contain_exactly(report)
+        expect(other_report2.mentioned_reports).to be_empty
+        expect(other_report3.mentioned_reports).to contain_exactly(report)
       end
     end
 
-    context '別の日報への言及がない場合' do
-      let(:content) do
-        <<~CONTENT
-          ボウリングのスコア計算プログラムを考え始めました。
-          カレンダーよりもたくさんのコードを書く必要がありそうでワクワクします。
-        CONTENT
-      end
+    context '削除時' do
+      let(:report) { create(:report, user:, content: <<~CONTENT) }
+        ボウリングのスコア計算プログラムを考え始めました。
+        カレンダーよりもたくさんのコードを書く必要がありそうでワクワクします。
 
-      it '言及を保存しないこと' do
-        report.save!
+        早速行き詰まってしまったので、他の生徒の方の日報を読ませていただきました。
 
-        expect(report.mentioning_reports).to be_empty
+        ダブルストライクの場合も考慮する必要があるんですね。
+        http://localhost:3000/reports/#{other_report1.id}
+
+        この方のようにまずはスコアを単純に合計するところからスタートしたいと思いました。
+        http://localhost:3000/reports/#{other_report2.id}
+
+        存在しないレポートを読みました
+        http://localhost:3000/reports/0
+      CONTENT
+
+      it '言及もなくなること' do
+        report.destroy!
+
+        expect(other_report1.mentioned_reports).to be_empty
+        expect(other_report2.mentioned_reports).to be_empty
       end
     end
   end
