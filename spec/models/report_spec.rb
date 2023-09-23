@@ -16,13 +16,13 @@ RSpec.describe Report, type: :model do
       )
     end
 
-    context 'with 自分の日報' do
+    context '自分の日報の場合' do
       subject { report.editable?(user) }
 
       it { is_expected.to eq true }
     end
 
-    context 'with 他人の日報' do
+    context '他人の日報の場合' do
       subject { report.editable?(other_user) }
 
       let(:other_user) do
