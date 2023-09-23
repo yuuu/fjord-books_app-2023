@@ -4,12 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'Users', type: :system do
   before do
-    @user = User.create(
-      email: 'user@example.com',
-      name: 'テスト 太郎',
-      password: 'password',
-      password_confirmation: 'password'
-    )
+    @user = create(:user)
   end
 
   it 'ログインして日報を新規作成できること' do
