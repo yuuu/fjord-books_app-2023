@@ -95,7 +95,7 @@ RSpec.describe Report, type: :model do
         CONTENT
       end
 
-      it 'メンションを保存すること' do
+      it '言及を保存すること' do
         report.save!
 
         expect(report.mentioning_reports).to contain_exactly(other_report1, other_report2)
@@ -105,7 +105,7 @@ RSpec.describe Report, type: :model do
     context '別の日報への言及がない場合' do
       let(:content) { 'ボウリングのスコア計算プログラムを考え始めました。カレンダーよりもたくさんのコードを書く必要がありそうでワクワクします。' }
 
-      it 'メンションを保存しないこと' do
+      it '言及を保存しないこと' do
         report.save!
 
         expect(report.mentioning_reports).to be_empty
