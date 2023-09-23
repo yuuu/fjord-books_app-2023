@@ -98,7 +98,7 @@ RSpec.describe Report, type: :model do
       it 'メンションを保存すること' do
         report.save!
 
-        expect(report.mentioning_reports).to match_array([other_report1, other_report2])
+        expect(report.mentioning_reports).to contain_exactly(other_report1, other_report2)
       end
     end
 
