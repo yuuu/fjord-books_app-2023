@@ -357,7 +357,7 @@ DEPENDENCIES
   puma
   rails (~> 7.0.6)
   rails_autolink
-  rspec-rails (~> 6.0.0)
+  rspec-rails
   rubocop (~> 1.45.1)
   rubocop-fjord
   rubocop-rails
