@@ -9,6 +9,5 @@ FactoryBot.define do
         カレンダーよりもたくさんのコードを書く必要がありそうでワクワクします。
       CONTENT
     end
-    user
   end
 end
