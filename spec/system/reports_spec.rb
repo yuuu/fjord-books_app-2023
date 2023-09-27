@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'Users', type: :system do
   before do
-    @user = create(:user)
+    create(:user)
   end
 
   it 'ログインして日報を新規作成できること' do
