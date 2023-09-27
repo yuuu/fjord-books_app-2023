@@ -7,13 +7,13 @@ RSpec.describe User, type: :model do
     subject { user.name_or_email }
 
     context '名前があるとき' do
-      let(:user) { User.new(name: 'テスト 太郎', email: 'user@example.com') }
+      let(:user) { create(:user) }
 
       it { is_expected.to eq 'テスト 太郎' }
     end
 
     context '名前がないとき' do
-      let(:user) { User.new(name: '', email: 'user@example.com') }
+      let(:user) { create(:user, name: '') }
 
       it { is_expected.to eq 'user@example.com' }
     end
