@@ -48,23 +48,24 @@ RSpec.describe Report, type: :model do
       ついにボウリングのスコア計算ができました！
       提出し終えたので、レビューが楽しみです。
     CONTENT
+    let(:content) { <<~CONTENT }
+      ボウリングのスコア計算プログラムを考え始めました。
+      カレンダーよりもたくさんのコードを書く必要がありそうでワクワクします。
+
+      早速行き詰まってしまったので、他の生徒の方の日報を読ませていただきました。
+
+      ダブルストライクの場合も考慮する必要があるんですね。
+      http://localhost:3000/reports/#{other_report1.id}
+
+      この方のようにまずはスコアを単純に合計するところからスタートしたいと思いました。
+      http://localhost:3000/reports/#{other_report2.id}
+
+      存在しないレポートを読みました
+      http://localhost:3000/reports/0
+    CONTENT
 
     context '新規作成時' do
-      let(:report) { build(:report, user:, content: <<~CONTENT) }
-        ボウリングのスコア計算プログラムを考え始めました。
-        カレンダーよりもたくさんのコードを書く必要がありそうでワクワクします。
-
-        早速行き詰まってしまったので、他の生徒の方の日報を読ませていただきました。
-
-        ダブルストライクの場合も考慮する必要があるんですね。
-        http://localhost:3000/reports/#{other_report1.id}
-
-        この方のようにまずはスコアを単純に合計するところからスタートしたいと思いました。
-        http://localhost:3000/reports/#{other_report2.id}
-
-        存在しないレポートを読みました
-        http://localhost:3000/reports/0
-      CONTENT
+      let(:report) { build(:report, user:, content:) }
 
       it '他日報への言及を保存すること' do
         report.save!
@@ -78,21 +79,7 @@ RSpec.describe Report, type: :model do
     end
 
     context '更新時' do
-      let(:report) { create(:report, user:, content: <<~CONTENT) }
-        ボウリングのスコア計算プログラムを考え始めました。
-        カレンダーよりもたくさんのコードを書く必要がありそうでワクワクします。
-
-        早速行き詰まってしまったので、他の生徒の方の日報を読ませていただきました。
-
-        ダブルストライクの場合も考慮する必要があるんですね。
-        http://localhost:3000/reports/#{other_report1.id}
-
-        この方のようにまずはスコアを単純に合計するところからスタートしたいと思いました。
-        http://localhost:3000/reports/#{other_report2.id}
-
-        存在しないレポートを読みました
-        http://localhost:3000/reports/0
-      CONTENT
+      let(:report) { build(:report, user:, content:) }
 
       it '更新後の他日報への言及を保存すること' do
         report.update!(content: <<~CONTENT)
@@ -124,21 +111,7 @@ RSpec.describe Report, type: :model do
     end
 
     context '削除時' do
-      let(:report) { create(:report, user:, content: <<~CONTENT) }
-        ボウリングのスコア計算プログラムを考え始めました。
-        カレンダーよりもたくさんのコードを書く必要がありそうでワクワクします。
-
-        早速行き詰まってしまったので、他の生徒の方の日報を読ませていただきました。
-
-        ダブルストライクの場合も考慮する必要があるんですね。
-        http://localhost:3000/reports/#{other_report1.id}
-
-        この方のようにまずはスコアを単純に合計するところからスタートしたいと思いました。
-        http://localhost:3000/reports/#{other_report2.id}
-
-        存在しないレポートを読みました
-        http://localhost:3000/reports/0
-      CONTENT
+      let(:report) { build(:report, user:, content:) }
 
       it '言及もなくなること' do
         report.destroy!
