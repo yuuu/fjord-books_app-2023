@@ -7,6 +7,12 @@ RSpec.describe 'Users', type: :system do
     create(:user)
   end
 
+  let(:title) { 'ボウリングのスコア計算プログラムに着手した' }
+  let(:content) { <<~CONTENT }
+    ボウリングのスコア計算プログラムを考え始めました。
+    カレンダーよりもたくさんのコードを書く必要がありそうでワクワクします。
+  CONTENT
+
   it 'ログインして日報を新規作成できること' do
     visit root_path
     expect(page).to have_content 'ログイン'
@@ -21,11 +27,12 @@ RSpec.describe 'Users', type: :system do
     click_link '日報の新規作成'
     expect(page).to have_content '日報の新規作成'
 
-    fill_in 'タイトル', with: '日報のタイトル'
-    fill_in '内容', with: '日報の内容'
+    fill_in 'タイトル', with: title
+    fill_in '内容', with: content
     click_button '登録する'
+
     expect(page).to have_content '日報が作成されました'
-    expect(page).to have_content '日報のタイトル'
-    expect(page).to have_content '日報の内容'
+    expect(page).to have_content title
+    expect(page).to have_content content
   end
 end
