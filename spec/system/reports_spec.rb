@@ -24,6 +24,7 @@ RSpec.describe 'Users', type: :system do
     fill_in 'タイトル', with: '日報のタイトル'
     fill_in '内容', with: '日報の内容'
     click_button '登録する'
+    expect(page).to have_content '日報が作成されました'
     expect(page).to have_content '日報のタイトル'
     expect(page).to have_content '日報の内容'
   end
