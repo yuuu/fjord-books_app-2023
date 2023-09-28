@@ -15,7 +15,7 @@ RSpec.describe User, type: :model do
     context '名前がないとき' do
       let(:user) { create(:user, name: '') }
 
-      it { is_expected.to eq 'user@example.com' }
+      it { is_expected.to eq user.email }
     end
   end
 end

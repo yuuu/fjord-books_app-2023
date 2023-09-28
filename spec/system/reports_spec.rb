@@ -16,7 +16,7 @@ RSpec.describe 'Users', type: :system do
     visit root_path
     expect(page).to have_content 'ログイン'
 
-    fill_in 'Eメール', with: 'user@example.com'
+    fill_in 'Eメール', with: user.email
     fill_in 'パスワード', with: 'password'
     click_button 'ログイン'
     expect(page).to have_content '本の一覧'
@@ -39,7 +39,7 @@ RSpec.describe 'Users', type: :system do
     visit root_path
     expect(page).to have_content 'ログイン'
 
-    fill_in 'Eメール', with: 'user@example.com'
+    fill_in 'Eメール', with: user.email
     fill_in 'パスワード', with: 'password'
     click_button 'ログイン'
     expect(page).to have_content '本の一覧'
@@ -62,7 +62,7 @@ RSpec.describe 'Users', type: :system do
     visit root_path
     expect(page).to have_content 'ログイン'
 
-    fill_in 'Eメール', with: 'user@example.com'
+    fill_in 'Eメール', with: user.email
     fill_in 'パスワード', with: 'password'
     click_button 'ログイン'
     expect(page).to have_content '本の一覧'
