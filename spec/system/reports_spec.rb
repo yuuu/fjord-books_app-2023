@@ -7,12 +7,7 @@ RSpec.describe 'Users', type: :system do
   let!(:report) { create(:report, user:, title: 'Sinatraの実装中', content: 'あと少し頑張ります') }
 
   it 'ログインして日報を新規作成できること' do
-    visit root_path
-    expect(page).to have_content 'ログイン'
-
-    fill_in 'Eメール', with: user.email
-    fill_in 'パスワード', with: 'password'
-    click_button 'ログイン'
+    sign_in_as(user)
     expect(page).to have_content '本の一覧'
 
     click_link '日報'
@@ -30,12 +25,7 @@ RSpec.describe 'Users', type: :system do
   end
 
   it 'ログインして日報を更新できること' do
-    visit root_path
-    expect(page).to have_content 'ログイン'
-
-    fill_in 'Eメール', with: user.email
-    fill_in 'パスワード', with: 'password'
-    click_button 'ログイン'
+    sign_in_as(user)
     expect(page).to have_content '本の一覧'
 
     click_link '日報'
@@ -53,12 +43,7 @@ RSpec.describe 'Users', type: :system do
   end
 
   it 'ログインして日報を削除できること' do
-    visit root_path
-    expect(page).to have_content 'ログイン'
-
-    fill_in 'Eメール', with: user.email
-    fill_in 'パスワード', with: 'password'
-    click_button 'ログイン'
+    sign_in_as(user)
     expect(page).to have_content '本の一覧'
 
     click_link '日報'
