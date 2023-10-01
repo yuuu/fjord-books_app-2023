@@ -10,7 +10,7 @@ RSpec.describe Report, type: :model do
     context '自分の日報の場合' do
       subject { report.editable?(user) }
 
-      it { is_expected.to eq true }
+      it { is_expected.to be true }
     end
 
     context '他人の日報の場合' do
@@ -18,7 +18,7 @@ RSpec.describe Report, type: :model do
 
       let(:other_user) { create(:user, name: 'テスト 次郎') }
 
-      it { is_expected.to eq false }
+      it { is_expected.to be false }
     end
   end
 
