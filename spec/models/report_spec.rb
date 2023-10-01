@@ -27,7 +27,7 @@ RSpec.describe Report, type: :model do
     let(:report) { create(:report, user:) }
 
     it '日付を返すこと' do
-      report.created_at = '2023-08-20 12:34:56'.to_datetime
+      report.created_at = '2023-08-20 12:34:56'.in_time_zone
       expect(report.created_on).to eq '2023-08-20'.to_date
     end
   end
